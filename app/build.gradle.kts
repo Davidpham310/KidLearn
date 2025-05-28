@@ -70,7 +70,8 @@ dependencies {
     // implementation(libs.dagger.hilt.android)
     // kapt(libs.dagger.hilt.compiler)
 
-    implementation(libs.androidx.material3)
+    implementation(libs.androidx.compose.material3)
+
 
     // Testing
     testImplementation(libs.junit)
