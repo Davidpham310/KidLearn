@@ -1,8 +1,13 @@
 package com.example.kidlearn
 
 import android.os.Bundle
+import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.compose.rememberNavController
+import com.example.kidlearn.core.theme.KidLearnTheme
+import com.example.kidlearn.presentation.navigation.AppNavGraph
+
 //import dagger.hilt.android.AndroidEntryPoint
 //import javax.inject.Inject
 
@@ -13,14 +18,12 @@ class MainActivity : AppCompatActivity() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
         enableEdgeToEdge()
-        
-//        // Safe access to greeting
-//        if (::greeting.isInitialized) {
-//            println("Greeting: $greeting")
-//        } else {
-//            println("Greeting is not initialized")
-//        }
+        setContent {
+            KidLearnTheme {
+                val navController = rememberNavController()
+                AppNavGraph(navController = navController)
+            }
+        }
     }
 }

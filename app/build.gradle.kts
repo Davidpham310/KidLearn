@@ -1,10 +1,22 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-//    id("org.jetbrains.kotlin.kapt")
+    // id("org.jetbrains.kotlin.kapt")
 }
 
 android {
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.compose.get()
+    }
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.3"
+    }
     namespace = "com.example.kidlearn"
     compileSdk = 35
 
@@ -37,16 +49,34 @@ android {
 }
 
 dependencies {
+    // Core Android
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(libs.material)
-    implementation(libs.androidx.activity)
+    implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.material)
 
-//    implementation(libs.dagger.hilt.android)
-//    kapt(libs.dagger.hilt.compiler)
+    // Compose
+    implementation(platform("androidx.compose:compose-bom:${libs.versions.composeBom.get()}"))
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.graphics)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.compose.material3)
     
+    // Navigation
+    implementation(libs.androidx.navigation.compose)
+    
+    // Hilt
+    // implementation(libs.dagger.hilt.android)
+    // kapt(libs.dagger.hilt.compiler)
+
+    implementation(libs.androidx.material3)
+
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
 }
