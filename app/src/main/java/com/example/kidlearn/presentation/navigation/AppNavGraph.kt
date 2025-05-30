@@ -1,5 +1,8 @@
 package com.example.kidlearn.presentation.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -18,12 +21,77 @@ fun AppNavGraph(navController: NavHostController) {
         navController = navController,
         startDestination = Screen.Splash.route
     ) {
-        composable(Screen.Splash.route) { SplashScreen(navController) }
-        composable(Screen.Onboarding.route) { OnboardingScreen(navController) }
-        composable(Screen.Home.route) { HomeScreen(navController) }
-        composable(Screen.LearnLetters.route) { LearnLettersScreen(navController) }
-        composable(Screen.LearnNumbers.route) { LearnNumbersScreen(navController) }
-        composable(Screen.LearnAnimals.route) { LearnAnimalsScreen(navController) }
-        composable(Screen.Quiz.route) { QuizScreen(navController) }
+        composable(
+            route = Screen.Splash.route,
+            enterTransition = { slideInFromRight() },
+            exitTransition = { slideOutToLeft() },
+            popEnterTransition = { slideInFromLeft() },
+            popExitTransition = { slideOutToRight() }
+        ) { SplashScreen(navController) }
+
+        composable(
+            route = Screen.Home.route,
+            enterTransition = { slideInFromRight() },
+            exitTransition = { slideOutToLeft() },
+            popEnterTransition = { slideInFromLeft() },
+            popExitTransition = { slideOutToRight() }
+        ) { HomeScreen(navController) }
+
+        composable(
+            route = Screen.Quiz.route,
+            enterTransition = { slideInFromRight() },
+            exitTransition = { slideOutToLeft() },
+            popEnterTransition = { slideInFromLeft() },
+            popExitTransition = { slideOutToRight() }
+        ) { QuizScreen(navController) }
+
+        composable(
+            route = Screen.Onboarding.route,
+            enterTransition = { slideInFromRight() },
+            exitTransition = { slideOutToLeft() },
+            popEnterTransition = { slideInFromLeft() },
+            popExitTransition = { slideOutToRight() }
+        ) { OnboardingScreen(navController) }
+
+        composable(
+            route = Screen.LearnLetters.route,
+            enterTransition = { slideInFromRight() },
+            exitTransition = { slideOutToLeft() },
+            popEnterTransition = { slideInFromLeft() },
+            popExitTransition = { slideOutToRight() }
+        ) { LearnLettersScreen(navController) }
+
+        composable(
+            route = Screen.LearnNumbers.route,
+            enterTransition = { slideInFromRight() },
+            exitTransition = { slideOutToLeft() },
+            popEnterTransition = { slideInFromLeft() },
+            popExitTransition = { slideOutToRight() }
+        ) { LearnNumbersScreen(navController) }
+
+        composable(
+            route = Screen.LearnAnimals.route,
+            enterTransition = { slideInFromRight() },
+            exitTransition = { slideOutToLeft() },
+            popEnterTransition = { slideInFromLeft() },
+            popExitTransition = { slideOutToRight() }
+        ) { LearnAnimalsScreen(navController) }
+
     }
+}
+
+private fun slideInFromRight(): EnterTransition {
+    return NavTransitions.slideInRight
+}
+
+private fun slideOutToLeft(): ExitTransition {
+    return NavTransitions.slideOutLeft
+}
+
+private fun slideInFromLeft(): EnterTransition {
+    return NavTransitions.slideInLeft
+}
+
+private fun slideOutToRight(): ExitTransition {
+    return NavTransitions.slideOutRight
 }
