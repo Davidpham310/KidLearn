@@ -13,4 +13,7 @@ object AppIcons {
     val SettingsIcon = R.drawable.ic_setting
     val RainbowIcon = R.drawable.ic_rainbow
     val LetterIcon = R.drawable.ic_letters
+    val StarIcon = R.drawable.ic_star
+    val VideoIcon = R.drawable.ic_video
+    val HandIcon = R.drawable.ic_hand
 }
