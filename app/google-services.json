@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "590139007991",
+    "project_id": "kidlearn-57474",
+    "storage_bucket": "kidlearn-57474.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:590139007991:android:29ea10cbbed5fd5e10c4f2",
+        "android_client_info": {
+          "package_name": "com.example.kidlearn"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjPwLKPgJ1lJNxdteLupi_CWl4YK-qj9w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

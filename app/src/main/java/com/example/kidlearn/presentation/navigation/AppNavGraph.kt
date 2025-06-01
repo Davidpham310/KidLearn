@@ -4,12 +4,14 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.kidlearn.presentation.home.HomeScreen
 import com.example.kidlearn.presentation.learn_animals.LearnAnimalsScreen
 import com.example.kidlearn.presentation.learn_letters.LearnLettersScreen
+import com.example.kidlearn.presentation.learn_letters.LetterViewModel
 import com.example.kidlearn.presentation.learn_numbers.LearnNumbersScreen
 import com.example.kidlearn.presentation.onboarding.OnboardingScreen
 import com.example.kidlearn.presentation.quiz.QuizScreen
@@ -59,7 +61,10 @@ fun AppNavGraph(navController: NavHostController) {
             exitTransition = { slideOutToLeft() },
             popEnterTransition = { slideInFromLeft() },
             popExitTransition = { slideOutToRight() }
-        ) { LearnLettersScreen(navController) }
+        ) {
+            val viewModel: LetterViewModel = hiltViewModel()
+            LearnLettersScreen(navController , viewModel , "A")
+        }
 
         composable(
             route = Screen.LearnNumbers.route,

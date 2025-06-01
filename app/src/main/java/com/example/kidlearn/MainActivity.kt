@@ -20,13 +20,14 @@ import com.example.kidlearn.core.theme.KidLearnTheme
 import com.example.kidlearn.presentation.navigation.AppNavGraph
 import com.example.kidlearn.presentation.navigation.BottomBar
 import com.example.kidlearn.presentation.navigation.Screen
+import com.google.firebase.FirebaseApp
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        FirebaseApp.initializeApp(this)
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
