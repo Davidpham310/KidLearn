@@ -24,7 +24,8 @@ class SplashViewModel @Inject constructor() : ViewModel() {
 
     private fun startLoading() {
         viewModelScope.launch {
-            val totalTime = 10_000L
+//            val totalTime = 10_000L
+            val totalTime = 0L
             val steps = 100
             val delayPerStep = totalTime / steps
 

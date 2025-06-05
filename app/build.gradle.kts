@@ -111,6 +111,8 @@ dependencies {
     // Firebase
     implementation(libs.firebase.firestore)
 
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
     // Unit & UI Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

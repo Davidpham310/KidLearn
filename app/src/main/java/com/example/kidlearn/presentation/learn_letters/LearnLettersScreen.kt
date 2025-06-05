@@ -1,33 +1,21 @@
 package com.example.kidlearn.presentation.learn_letters
+
 import android.speech.tts.TextToSpeech
 import androidx.compose.foundation.background
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.material3.Surface
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.kidlearn.core.components.icons.AppIcons
 import com.example.kidlearn.core.theme.Blue
-import com.example.kidlearn.presentation.common.component.LearningCard
-import com.example.kidlearn.presentation.common.component.RotatingImage
-import com.example.kidlearn.presentation.common.component.TopBar
-import java.util.Locale
+import com.example.kidlearn.domain.model.LearnableItem
+import com.example.kidlearn.presentation.common.component.*
+import java.util.*
+import kotlin.collections.map
 
 @Composable
 fun LearnLettersScreen(
@@ -36,56 +24,113 @@ fun LearnLettersScreen(
     id: String
 ) {
     val context = LocalContext.current
-    val letter = viewModel.letter.value
+    val state = viewModel.state.value
+    val currentLetter = state.currentLetter
+    val letters = state.letters
 
-    // TTS instance
     var tts by remember { mutableStateOf<TextToSpeech?>(null) }
 
-    DisposableEffect(Unit) {
-        tts = TextToSpeech(context) {
-            if (it == TextToSpeech.SUCCESS) tts?.language = Locale("vi") // Tiếng Việt
-        }
-
-        onDispose {
-            tts?.shutdown()
+    // Khởi tạo TextToSpeech và gán hàm nói vào ViewModel
+    LaunchedEffect(Unit) {
+//        viewModel.uploadLettersToFirestore()
+        tts = TextToSpeech(context) { status ->
+            if (status == TextToSpeech.SUCCESS) {
+                tts?.language = Locale("vi")
+                viewModel.onSpeak = { text ->
+                    tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+                }
+            }
         }
     }
 
-    LaunchedEffect(key1 = id) {
+    DisposableEffect(Unit) {
+        onDispose {
+            tts?.shutdown()
+            viewModel.onSpeak = null
+        }
+    }
+
+    LaunchedEffect(id) {
         viewModel.fetchLetter(id)
+        viewModel.fetchAllLetters()
     }
 
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White)
+                .background(Color(0xFFFFF8DC)) // Màu nền dịu
         ) {
             TopBar(
                 onBackClick = { navController.popBackStack() },
-                title = "Học chữ cái",
+                title = "Học Bảng Chữ Cái",
                 backgroundColor = Blue
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-            if (letter != null) {
-                LearningCard(
-                    title = letter.title.toString(),
-                    illustration = letter.imageRes,
-                    onPlayAudio = {
-                        tts?.speak(letter.textToRead, TextToSpeech.QUEUE_FLUSH, null, null)
+            when {
+                state.errorMessage != null -> {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Text(
+                            text = state.errorMessage,
+                            color = Color.Red,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
                     }
-                )
-            } else {
-                // Hiển thị loading spinner khi dữ liệu chưa tải xong
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    RotatingImage(imageRes = AppIcons.RefreshIcon, modifier = Modifier.size(48.dp))
+                }
+
+                else -> {
+                    val currentItem = currentLetter?.let {
+                        LearnableItem.Letter(
+                            id = it.id,
+                            title = it.displayTitle,
+                            imageRes = it.imageRes,
+                            textToRead = it.textToRead
+                        )
+                    }
+
+                    currentItem?.let { item ->
+                        LargeItemCard(
+                            item = item,
+                            isLoading = state.isLoading,
+                            onSpeakClick = {
+                                viewModel.onEvent(LetterEvent.PlayAudio(item.textToRead))
+                            }
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text(
+                        text = "Chọn Chữ Cái",
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        color = Blue
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    val gridItems = letters.map {
+                        LearnableItem.Letter(
+                            id = it.id,
+                            title = it.displayTitle,
+                            imageRes = it.imageRes,
+                            textToRead = it.textToRead
+                        )
+                    }
+
+                    ItemsGrid(
+                        items = gridItems,
+                        isLoading = state.isLoading && letters.isEmpty(),
+                        onItemClick = { selectedId ->
+                            viewModel.onEvent(LetterEvent.SelectLetter(selectedId))
+                        }
+                    )
                 }
             }
         }
     }
 }
+
+

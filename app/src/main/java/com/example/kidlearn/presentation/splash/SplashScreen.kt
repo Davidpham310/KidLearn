@@ -20,7 +20,7 @@ fun SplashScreen(
     LaunchedEffect(Unit) {
         viewModel.onEvent(SplashEvent.StartLoading)
 
-        delay(10_000)
+//        delay(10_000)
 
         navController.navigate(Screen.Home.route) {
             popUpTo(Screen.Splash.route) { inclusive = true }

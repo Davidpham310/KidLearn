@@ -9,10 +9,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.kidlearn.presentation.home.HomeScreen
+import com.example.kidlearn.presentation.learn_animals.AnimalViewModel
 import com.example.kidlearn.presentation.learn_animals.LearnAnimalsScreen
 import com.example.kidlearn.presentation.learn_letters.LearnLettersScreen
 import com.example.kidlearn.presentation.learn_letters.LetterViewModel
 import com.example.kidlearn.presentation.learn_numbers.LearnNumbersScreen
+import com.example.kidlearn.presentation.learn_numbers.NumberViewModel
 import com.example.kidlearn.presentation.onboarding.OnboardingScreen
 import com.example.kidlearn.presentation.quiz.QuizScreen
 import com.example.kidlearn.presentation.splash.SplashScreen
@@ -63,7 +65,9 @@ fun AppNavGraph(navController: NavHostController) {
             popExitTransition = { slideOutToRight() }
         ) {
             val viewModel: LetterViewModel = hiltViewModel()
-            LearnLettersScreen(navController , viewModel , "A")
+            val state = viewModel.state.value
+            val firstLetterId = state.letters.firstOrNull()?.id ?: "1"
+            LearnLettersScreen(navController , viewModel , firstLetterId)
         }
 
         composable(
@@ -72,7 +76,12 @@ fun AppNavGraph(navController: NavHostController) {
             exitTransition = { slideOutToLeft() },
             popEnterTransition = { slideInFromLeft() },
             popExitTransition = { slideOutToRight() }
-        ) { LearnNumbersScreen(navController) }
+        ) {
+            val viewModel: NumberViewModel = hiltViewModel()
+            val state = viewModel.state.value
+            val firstNumberId = state.values.firstOrNull()?.id ?: "1"
+            LearnNumbersScreen(navController , viewModel , firstNumberId)
+        }
 
         composable(
             route = Screen.LearnAnimals.route,
@@ -80,7 +89,12 @@ fun AppNavGraph(navController: NavHostController) {
             exitTransition = { slideOutToLeft() },
             popEnterTransition = { slideInFromLeft() },
             popExitTransition = { slideOutToRight() }
-        ) { LearnAnimalsScreen(navController) }
+        ) {
+            val viewModel: AnimalViewModel = hiltViewModel()
+            val state = viewModel.state.value
+            val firstAnimalId = state.names.firstOrNull()?.id ?: "1"
+            LearnAnimalsScreen(navController , viewModel , firstAnimalId)
+        }
 
     }
 }
